@@ -1,5 +1,6 @@
 /logs/
 /files/todo_data.bin
+/files/config.json
 *.pyc
 .idea/.gitignore
 .idea/misc.xml
