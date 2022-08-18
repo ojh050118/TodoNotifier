@@ -1,3 +1,4 @@
 /logs/
 /files/todo_data.bin
-/src/todo_utils/__pycache__/
+*.pyc
+/.idea/
