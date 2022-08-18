@@ -41,4 +41,3 @@ venv.bak/
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
-

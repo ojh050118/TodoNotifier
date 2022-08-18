@@ -1,13 +1,32 @@
+import os
+from ast import literal_eval
+
 import discord
 
 from debug import Logger
 from todo_notifier import TodoNotifier
 
-TOKEN = 'MTAwNTQ5NjQwMjcwNjcxNDY0NQ.GdK9-Y.GbGIPIlVbrdwrg1N1XcsXbV6ae1U7e_QiX7SOI'
-APPLICATION_ID = 1005496402706714645
-
 logger = Logger('discord')
-bot = TodoNotifier(APPLICATION_ID, logger)
+
+application_id = str(os.environ.get('todonotifier_application_id'))
+token = os.environ.get('todonotifier_token')
+
+if not application_id or not token:
+    logger.logger.warning('The token or application ID does not exist in the environment variable. ' +
+                          'Loading from config.json...')
+
+    with open('files/config.json', 'r') as f:
+        config = literal_eval(f.read())
+        application_id = str(config['application_id'])
+        token = config['token']
+
+if application_id.isdigit():
+    application_id = int(application_id)
+else:
+    logger.logger.error('Application ID cannot contain characters!')
+
+
+bot = TodoNotifier(application_id, logger)
 
 
 @bot.tree.error
@@ -19,4 +38,4 @@ async def on_error(interaction: discord.Interaction, error: discord.app_commands
 
     await interaction.response.send_message(embed = embed, ephemeral = True)
 
-bot.run(TOKEN, log_handler = logger.handler, log_level = logger.log_level, log_formatter = logger.formatter)
+bot.run(token, log_handler = logger.handler, log_level = logger.log_level, log_formatter = logger.formatter)
