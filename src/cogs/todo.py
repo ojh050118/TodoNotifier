@@ -16,7 +16,7 @@ class ToDo(commands.Cog):
 
     @app_commands.command(name = 'add', description = '새로운 작업을 추가합니다.')
     async def add_todo(self, interaction: discord.Interaction):
-        await interaction.response.send_modal(ToDoGenerator())
+        await interaction.response.send_modal(ToDoGenerator(interaction.user.id))
 
     @app_commands.command(name = 'todo', description = '자신의 할 것들을 봅니다.')
     async def todo(self, interaction: discord.Interaction):
@@ -38,6 +38,10 @@ class ToDo(commands.Cog):
         embed.set_footer(text = interaction.user, icon_url = interaction.user.avatar)
 
         await interaction.response.send_message(embed = embed)
+
+    @app_commands.command(name = 'assign', description = '특정 유저에게 작업을 할당합니다.')
+    async def assign(self, interaction: discord.Interaction, user: discord.User):
+        await interaction.response.send_modal(ToDoGenerator(user.id))
 
     @app_commands.command(name = 'import', description = '모든 To Do데이터를 포함하는 파일에 새로운 데이터를 덮어씌웁니다.')
     @app_commands.describe(data = 'dict(json)형식으로 구성된 텍스트')

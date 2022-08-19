@@ -1,11 +1,12 @@
 import discord
 
-from todo_utils import todo_store
 from modals.todo_reminder import ToDoReminder
+from todo_utils import todo_store
 
 
 class ToDoCategory(discord.ui.Select):
-    def __init__(self):
+    def __init__(self, user_id: int):
+        self.user_id = user_id
         options = [
             discord.SelectOption(label = '작업', emoji = '🏠')
             ]
@@ -14,7 +15,8 @@ class ToDoCategory(discord.ui.Select):
                          options = options)
 
     async def callback(self, interaction: discord.Interaction):
-        todo_name = list(todo_store.get_guild_user_todo(interaction).keys())[-1]
-        todo_store.get_todo_info(interaction, todo_name)['category'] = self.values
+        user_todo = todo_store.todo[interaction.guild_id][self.user_id]
+        todo_name = list(user_todo.keys())[-1]
+        user_todo[todo_name]['category'] = self.values
 
-        await interaction.response.send_modal(ToDoReminder())
+        await interaction.response.send_modal(ToDoReminder(self.user_id))

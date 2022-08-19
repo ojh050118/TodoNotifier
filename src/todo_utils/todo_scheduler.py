@@ -58,3 +58,7 @@ async def send_dm(todo_info: dict):
 
     await dm_channel.send(embed = embed)
     logger.logger.info(f'Successfully sent a DM to user "{user}"!')
+
+
+async def get_user(user_id: int) -> discord.User:
+    return await bot.fetch_user(user_id)
